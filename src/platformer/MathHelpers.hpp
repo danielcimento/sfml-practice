@@ -1,0 +1,1 @@
+float approach(float goal, float current, float delT);

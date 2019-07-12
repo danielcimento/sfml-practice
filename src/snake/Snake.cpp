@@ -1,4 +1,4 @@
-#include "../Main.hpp"
+// #include "../Helpers.hpp"
 #include <SFML/Window/VideoMode.hpp>
 
 #define BLOCK_SIZE 20
@@ -200,9 +200,9 @@ void playSnake()
 	sf::VideoMode vm = sf::VideoMode::getDesktopMode();
 	sf::RenderWindow window(sf::VideoMode(vm.width, vm.height), "Snake", sf::Style::Fullscreen);
 	window.setFramerateLimit(5);
-#ifdef SFML_SYSTEM_WINDOWS
-	__windowsHelper.setIcon(window.getSystemHandle());
-#endif
+// #ifdef SFML_SYSTEM_WINDOWS
+// 	__windowsHelper.setIcon(window.getSystemHandle());
+// #endif
 	sf::Vector2f initialPosition = sf::Vector2f(vm.width / 2 - (vm.width % BLOCK_SIZE), vm.height / 2 - (vm.height % BLOCK_SIZE));
 	Snake snake(initialPosition);
 	Apple *apple = new Apple(getRandomPosition(vm.width, vm.height));
