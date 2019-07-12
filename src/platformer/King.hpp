@@ -1,17 +1,29 @@
 #ifndef KING_H
 #define KING_H
 
-class King : public sf::Drawable {
+#include "Camera.hpp"
+
+class King : public CameraDrawable {
 	public:
-		King(sf::Vector2f screenDimensions);
+		King(sf::Vector2f screenDimensions, Camera *pCamera);
 		void handleKeypress(int keyCode);
 		void handleKeyUp(int keyCode);
 		void update(float timeDelta);
-	private:
+		virtual void draw(sf::RenderTarget &target) {
+			sprite.move(-camera->getCameraTransform());
+			target.draw(sprite);
+			sprite.move(camera->getCameraTransform());
+		}
+		virtual sf::Vector2f getPosition() {
+			return sprite.getPosition();
+		}
 		sf::Sprite sprite;
+		bool followVertically();
+	private:
 		bool facingRight = true;
 		bool jumping = false;
 		int currentWalkTexture = 0;
+		Camera *camera;
 		sf::Clock walkingTimer;
 		sf::Clock jumpingTimer;
 		std::vector<sf::Texture> walkingTextures;
@@ -19,9 +31,6 @@ class King : public sf::Drawable {
 		std::vector<sf::Texture> jumpingTextures;
 		sf::Vector2f targetVelocity;
 		sf::Vector2f currentVelocity;
-		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {
-			target.draw(sprite);
-		}
 		void move(float timeDelta);
 		void updateTexture();
 };

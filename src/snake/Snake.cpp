@@ -1,4 +1,4 @@
-// #include "../Helpers.hpp"
+#include "../Helpers.hpp"
 #include <SFML/Window/VideoMode.hpp>
 
 #define BLOCK_SIZE 20

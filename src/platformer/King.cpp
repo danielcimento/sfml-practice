@@ -1,5 +1,6 @@
 #include "King.hpp"
 #include "MathHelpers.hpp"
+#include "Camera.hpp"
 #define KING_SCALE 3.0f
 #define KING_VELOCITY 200.0f
 #define KING_ACCELERATION 250.0f
@@ -7,7 +8,8 @@
 #define GRAVITY 400.0f
 #define JUMP_HEIGHT 500.0f
 
-King::King(sf::Vector2f screenDimensions) {
+King::King(sf::Vector2f screenDimensions, Camera *pCamera) {
+	camera = pCamera;
 	currentVelocity = targetVelocity = sf::Vector2f(0.0, 0.0);
 
 	for(int i = 0; i < 4; i++) {
@@ -27,10 +29,8 @@ King::King(sf::Vector2f screenDimensions) {
 
 	sprite.setTexture(walkingTextures[0]);
 	sprite.setScale(sf::Vector2f(KING_SCALE, KING_SCALE));
-	std::cout << sprite.getGlobalBounds().height << std::endl;
 	sprite.setPosition(sf::Vector2f(screenDimensions.x / 2, screenDimensions.y - sprite.getGlobalBounds().height));
 	sprite.setOrigin(8.5f, 0.0f);
-	std::cout << sprite.getPosition().x << ", " << sprite.getPosition().y << std::endl;
 }
 
 void King::move(float timeDelta) {
@@ -50,7 +50,10 @@ void King::move(float timeDelta) {
 
 	// If we're at the bottom of the screen, kill the vertical velocity (this allows us to jump)
 	if(std::abs(sprite.getPosition().y - 1014.0f) < 0.001f) {
+		camera->addTrauma(std::max(0.0, 1.0 - (TERMINAL_SPEED - currentVelocity.y) / (TERMINAL_SPEED - JUMP_HEIGHT)));
+
 		currentVelocity.y = 0.0;
+
 	}
 
 	// If we're past the "charge" of the jump, we set our current velocity
@@ -143,4 +146,8 @@ void King::handleKeyUp(int keyCode) {
 		default:
 			break;
 	}
+}
+
+bool King::followVertically() {
+	return !(currentVelocity.y < 0.0);
 }
